@@ -32,7 +32,7 @@
             font-weight: bold;
         }
 
-        /* Persistent Tiny Restart Button */
+        /* Persistent Tiny Buttons */
         .header-restart-btn {
             background-color: #e67e22;
             color: white;
@@ -145,19 +145,39 @@
             background-color: rgba(255, 255, 255, 0); 
         }
 
-        .slot.filled {
+        /* Custom animation that starts bright green and fades to the standard background */
+        @keyframes greenSnapOff {
+            0%, 99% {
+                box-shadow: inset 0 0 6px #46be21, 0 0 6px #34b80c;
+                border: 2px solid #31f700;
+            }
+            100% {
+                box-shadow: inset 0 0 0px transparent, 0 0 0px transparent;
+                border: 1px dashed #71809300; /* Returns to default slot border */
+            }
+        }
+
+        /* This applies the 2-second animation ONLY when a book is filled AND NOT misplaced */
+        .slot.filled:not(.misplaced-error) {
             font-weight: bold;
             padding-top: 40px;
             box-sizing: border-box;
+            animation: greenSnapOff 3s forwards;
         }
 
         /* Misplacement Error Glow Indicator */
         .slot.misplaced-error {
+            font-weight: bold;
+            padding-top: 40px;
+            box-sizing: border-box;
             box-shadow: inset 0 0 6px #e27e20, 0 0 6px #ffb26b !important;
             border: 2px solid #9c2c00 !important;
         }
 
         .slot.misplaced-error.shelf-book-highlight {
+            font-weight: bold;
+            padding-top: 40px;
+            box-sizing: border-box;
             border: 2px solid #ffffff !important;
             box-shadow: 0 0 15px #0fe2f1, inset 0 0 8px #1e7fff !important;
         }
@@ -444,7 +464,10 @@
     
     <div class="stats-bar">
         <div>Coins: <span id="coin-txt">💰0</span></div>
-        <button class="header-restart-btn" onclick="triggerRestartSequence()">🔄 Restart</button>
+        <div>
+            <button class="header-restart-btn" onclick="triggerRestartSequence()">🔄 Restart</button>
+            <button class="header-restart-btn" style="background-color: #2980b9; margin-left: 5px;" onclick="toggleRuleModal(true)">📋 Rule</button>
+        </div>
         <div>Capacity: <span id="cap-txt">🎒0/10</span></div>
     </div>
 
@@ -474,6 +497,25 @@
     <h3>📦 Messy Floor Piles (Scroll to explore)</h3>
     <div class="floor-scroll-container" id="floor-viewport">
         <div class="pile-zone" id="pile-zone"></div>
+    </div>
+</div>
+
+<!-- Game Rule Modal -->
+<div id="rule-modal" class="modal-overlay">
+    <div class="modal-box">
+        <h2>📋 Game Rules</h2>
+        <p style="text-align: left; font-size: 14px; line-height: 1.6; color: #dddddd; margin-bottom: 20px;">
+            You are a librarian, your job is to collect books on the messy floor and put the books in the right section in the right order.<br>
+            If you put a book in the wrong section or wrong slot, an error glow indicator will occur.<br>
+            Competing a row will give you coins. You also have abilities. You can upgrade your abilities.<br>
+            <br>
+            The abilities are:<br>
+            1. Quick Sort: Automatically categorizes and sort the books in your hand.<br>
+            2. Locate Book: Highlights potential matches directly on the floor as well as shelfs.<br>
+            3. Locate Shelf: Instantly flashes destination Section for easy filing.<br>
+            4. Magic Pool: Magnetically pulls corresponding volume sequences directly to your hand.
+        </p>
+        <button class="close-modal-btn" onclick="toggleRuleModal(false)">Return to Archive</button>
     </div>
 </div>
 
@@ -644,7 +686,7 @@
                 1: { name: "Macroeconomic Systems", color: "linear-gradient(135deg, #718093, #2f3640)" }, 
                 2: { name: "Micro Market Dynamics", color: "radial-gradient(circle, #b2bec3, #636e72, #212121)" }, 
                 3: { name: "Fiscal Policy Analysis", color: "repeating-linear-gradient(45deg, #34495e, #34495e 10px, #2c3e50 10px, #2c3e50 20px)" }, 
-                4: { name: "Banking & Currencies", color: "repeating-radial-gradient(circle, #718093, #718093 5px, #1c2833 5px, #1c2833 12px)" } 
+                4: { name: "Banking & Currencies", color: "repeating-radial-gradient(circle, #718093, #718093 5px, #1c2833 12px, #1c2833 12px)" } 
             } 
         },
 
@@ -689,7 +731,7 @@
         }
     };
 
-    // Global Operating Runtime Maps (Dynamically loaded by the setup menu selection)
+    // Global Operating Runtime Maps
     let SHELF_TO_BOOK_MAP = {};
     let CATEGORIES = [];
 
@@ -740,9 +782,7 @@
         document.getElementById("length-modal").style.display = "none";
         
         SHELF_TO_BOOK_MAP = {};
-        let keysPool = Object.keys(SOURCE_MASTER_MAP); // Gets keys in order: ["2A", "2B", "2C", "2D", ...]
-        
-        // Pull sequentially from the start of the list instead of shuffling
+        let keysPool = Object.keys(SOURCE_MASTER_MAP);
         let selectedKeys = keysPool.slice(0, count);
         
         selectedKeys.forEach(k => {
@@ -755,8 +795,7 @@
     }
 
     function resetFullGameStatesCore() {
-
-        localStorage.removeItem("librarian_sim_save"); /*Clear any existing saved state*/
+        localStorage.removeItem("librarian_sim_save");
         coins = 0;
         maxCapacity = 10;
         playerHand = [];
@@ -791,6 +830,10 @@
     // ==========================================
     function triggerRestartSequence() {
         document.getElementById("confirm-modal").style.display = "flex";
+    }
+
+    function toggleRuleModal(open) {
+        document.getElementById("rule-modal").style.display = open ? "flex" : "none";
     }
 
     function confirmRestartResponse(confirmed) {
@@ -831,7 +874,6 @@
             }
         });
 
-        // Knuth-Fisher-Yates Shuffle
         for (let i = uniqueDeck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [uniqueDeck[i], uniqueDeck[j]] = [uniqueDeck[j], uniqueDeck[i]];
@@ -912,8 +954,6 @@
     function rebuildDynamicShelfAssignments() {
         dynamicShelfMap = {};
         let assignedTopicsPerCategory = {}; 
-
-        // Extract all currently placed books into a list so we can sort them by time
         let placedBooksTimeline = [];
 
         for (let key in completedShelves) {
@@ -922,10 +962,8 @@
             placedBooksTimeline.push({ key: key, book: book });
         }
 
-        // FIX: Sort books so that the oldest placements (smaller placedAt values) are processed first
         placedBooksTimeline.sort((a, b) => (a.book.placedAt || 0) - (b.book.placedAt || 0));
 
-        // Process the slots in order of real-world placement history
         placedBooksTimeline.forEach(item => {
             let key = item.key;
             let book = item.book;
@@ -944,10 +982,8 @@
                 }
 
                 if (assignedTopicsPerCategory[cat].has(book.topic)) {
-                    // An older book already claimed this topic elsewhere! Flag this secondary row as invalid.
                     dynamicShelfMap[mapKey] = -1; 
                 } else {
-                    // This is the earliest placement of this topic; lock the row to it
                     dynamicShelfMap[mapKey] = book.topic; 
                     assignedTopicsPerCategory[cat].add(book.topic);
                 }
@@ -1123,8 +1159,6 @@
         if (playerHand.length === 0) return;
         
         let movingBook = playerHand.shift(); 
-        
-        // FIX: Attach a placement timestamp to track which book landed on the shelves first
         movingBook.placedAt = Date.now(); 
         
         completedShelves[targetKey] = movingBook;
@@ -1132,6 +1166,7 @@
         renderUI();
         saveGameState();
     }
+
     // ==========================================
     // 5. EVALUATION AND WIN CHECK SYSTEM
     // ==========================================
@@ -1173,7 +1208,6 @@
             }
         });
 
-        // Trigger dynamic global pop-up window victory notification
         if (perfectRowsCount === totalActiveRows && !isVictoryScreenLocked) {
             isVictoryScreenLocked = true;
             setTimeout(() => {
@@ -1398,7 +1432,6 @@
     }
     
     function saveGameState() {
-        // If the selection modal is open, don't save an empty state
         if (!CATEGORIES || CATEGORIES.length === 0) return;
 
         const gameState = {
@@ -1417,18 +1450,16 @@
             lvlPool: lvlPool,
             lvlSort: lvlSort
         };
-        // Save to browser memory as a text string
         localStorage.setItem("librarian_sim_save", JSON.stringify(gameState));
     }
 
     function loadGameState() {
         const savedData = localStorage.getItem("librarian_sim_save");
-        if (!savedData) return false; // No save found, show length selection modal normally
+        if (!savedData) return false;
 
         try {
             const gameState = JSON.parse(savedData);
             
-            // Restore all game variables
             coins = gameState.coins;
             maxCapacity = gameState.maxCapacity;
             playerHand = gameState.playerHand;
@@ -1444,10 +1475,8 @@
             lvlPool = gameState.lvlPool || 0;
             lvlSort = gameState.lvlSort || 0;
 
-            // Hide the pre-game selection modal since we are resuming
             document.getElementById("length-modal").style.display = "none";
 
-            // Rebuild the HTML elements based on saved data
             buildShelfLayoutDOM();
             drawFloor();
             renderUI();
@@ -1458,7 +1487,6 @@
         }
     }
     
-    // TRIGGER THE LOAD CHECK AUTOMATICALLY WHEN THE PAGE OPENS
     window.onload = function() {
         loadGameState();
     };
