@@ -1168,7 +1168,7 @@
             }
             playerHand.unshift(completedShelves[targetKey]);
             completedShelves[targetKey] = null;
-            checkShelfPayoutsAndWinConditions();
+            lfPayoutsAndWinConditions();
             renderUI();
             return;
         }
@@ -1179,7 +1179,7 @@
         movingBook.placedAt = Date.now(); 
         
         completedShelves[targetKey] = movingBook;
-        checkShelfPayoutsAndWinConditions();
+        lfPayoutsAndWinConditions();
         renderUI();
         saveGameState();
     }
@@ -1191,6 +1191,7 @@
         let perfectRowsCount = 0;
 
         CATEGORIES.forEach(cat => {
+            // 🌟 FIX 1: Dynamically count how many rows/topics this category actually has in the CSV!
             let currentCategoryTopicsCount = 0;
             if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics) {
                 currentCategoryTopicsCount = Object.keys(SHELF_TO_BOOK_MAP[cat].topics).length;
@@ -1207,7 +1208,11 @@
                 if (assignedTopicId === undefined || !targetBookType) {
                     rowPerfect = false;
                 } else {
-                    let maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
+                    // 🌟 FIX 2: Correctly pull dynamic volumes for this exact topic from the map
+                    let maxVolsForThisTopic = 10;
+                    if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
+                        maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
+                    }
 
                     for (let v = 1; v <= maxVolsForThisTopic; v++) {
                         let book = completedShelves[`${cat}-T${shelfRow}-V${v}`];
@@ -1221,11 +1226,20 @@
                 if (rowPerfect) {
                     perfectRowsCount++;
                     if (!payoutsAwarded[shelfKey]) {
+                        // 🌟 FIX 3: Dynamic payout matching the actual number of slots!
+                        let maxVolsForThisTopic = 10;
+                        if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
+                            maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
+                        }
                         let dynamicPayoutValue = maxVolsForThisTopic * 2;
                         coins += dynamicPayoutValue;
                         payoutsAwarded[shelfKey] = true;
                     }
                 } else if (!rowPerfect && payoutsAwarded[shelfKey] && !isVictoryScreenLocked) {
+                    let maxVolsForThisTopic = 10;
+                    if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
+                        maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
+                    }
                     let dynamicPayoutValue = maxVolsForThisTopic * 2;
                     coins = Math.max(0, coins - dynamicPayoutValue);
                     payoutsAwarded[shelfKey] = false;
@@ -1233,14 +1247,14 @@
             }
         });
 
-        if (perfectRowsCount === totalActiveRows && !isVictoryScreenLocked) {
+        // Only trigger win screen if all dynamically tracked rows match perfectly
+        if (totalActiveRows > 0 && perfectRowsCount === totalActiveRows && !isVictoryScreenLocked) {
             isVictoryScreenLocked = true;
             setTimeout(() => {
                 document.getElementById("victory-modal").style.display = "flex";
             }, 300);
         }
     }
-
     // ==========================================
     // 6. SPELLS AND GAMEPLAY MODIFIERS
     // ==========================================
