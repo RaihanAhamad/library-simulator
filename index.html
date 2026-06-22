@@ -308,7 +308,7 @@
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 8px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
         .magic-btn {
             color: rgb(0, 0, 0);
@@ -316,7 +316,6 @@
             padding: 8px 3px;
             font-weight: bold;
             border-radius: 5px;
-            min-width: 96px;
             cursor: pointer;
             font-size: 12px;
             transition: background-color 0.2s, opacity 0.2s;
@@ -1040,7 +1039,7 @@
                     playerHand.forEach((book, i) => {
                         const lineEl = document.createElement("div");
                         lineEl.className = "hand-text-line";
-                        let bookName = getBookCodeName(book);
+                        let bookName = book.topicName ? book.topicName : getBookCodeName(book);
                         
                         if (i === 0) {
                             lineEl.className += " top-active-book";
