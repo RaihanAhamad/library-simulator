@@ -668,7 +668,131 @@
     // ==========================================
     // 1. MASTER POOL REPOSITORY DICTIONARY
     // ==========================================
-    let SOURCE_MASTER_MAP = {};
+    const SOURCE_MASTER_MAP = {
+        // === COLUMN 1 ===
+        "2A": { 
+            type: "Spells", 
+            topics: { 
+                1: { name: "Basics of Spell", volumes:3, color: "linear-gradient(135deg, #ff3333, #990000)" }, 
+                2: { name: "Ancient Spell", volumes:3, color: "radial-gradient(circle, #ff4d4d, #aa0000, #4a0000)" }, 
+                3: { name: "Uses of Spell", volumes:3, color: "repeating-linear-gradient(45deg, #ff1a1a, #ff1a1a 7px, #b30000 7px, #b30000 14px)" }, 
+                4: { name: "Spell used in Modern Times", volumes:3, color: "repeating-radial-gradient(circle, #ff0000, #ff0000 5px, #800000 5px, #800000 12px)" },
+                5: { name: "Testing book name", volumes:7, color: "repeating-radial-gradient(circle, #ff0000, #ff0000 5px, #800000 5px, #800000 12px)" } ,
+                6: { name: "I love you", volumes:7, color: "radial-gradient(circle, #004d4d, #aaaa00, #4a0000)" },
+                7: { name: "What is your name", volumes:7, color: "repeating-linear-gradient(90deg, #ff1a1a, #ff1a1a 7px, #b30000 7px, #b30000 14px)" },
+                8: { name: "Lets see", volumes:7, color: "repeating-linear-gradient(135deg, #ff1a1a, #ff1a1a 17px, #b30000 17px, #b30000 20px)" } 
+            } 
+        },
+        "1A": { 
+            type: "Literature", 
+            topics: { 
+                1: { name: "Classical Mythology", volumes:5, color: "linear-gradient(135deg, #ff9f43, #d35400)" }, 
+                2: { name: "Shakespearean Drama", volumes:5, color: "radial-gradient(circle, #ffb142, #e67e22, #a04000)" }, 
+                3: { name: "Romantic Era Poetry", volumes:5, color: "repeating-linear-gradient(45deg, #f39c12, #f39c12 10px, #d35400 10px, #d35400 20px)" }, 
+                4: { name: "Modernist Fiction", volumes:5, color: "repeating-radial-gradient(circle, #e67e22, #e67e22 5px, #ba4a00 5px, #ba4a00 12px)" } 
+            } 
+        },
+
+        // === COLUMN 2 ===
+        "2B": { 
+            type: "History", 
+            topics: { 
+                1: { name: "Early Eras History", volumes:3, color: "linear-gradient(135deg, #2ecc71, #1b5e20)" }, 
+                2: { name: "Medieval Chronicles", volumes:3, color: "radial-gradient(circle, #55efc4, #26de81, #006266)" }, 
+                3: { name: "Modern Century Dynamics", volumes:3, color: "repeating-linear-gradient(45deg, #00ff00, #00ff00 10px, #00aa00 10px, #00aa00 20px)" }, 
+                4: { name: "World History Structures", volumes:4, color: "repeating-radial-gradient(circle, #2ecc71, #2ecc71 5px, #145a32 5px, #145a32 12px)" } 
+            } 
+        },
+        "1B": { 
+            type: "Philosophy", 
+            topics: { 
+                1: { name: "Ancient Metaphysics", volumes:5, color: "linear-gradient(135deg, #a55eea, #4b1461)" }, 
+                2: { name: "Existentialist Essays", volumes:5, color: "radial-gradient(circle, #d6a2e8, #9b59b6, #4a235a)" }, 
+                3: { name: "Logical Positivism", volumes:3, color: "repeating-linear-gradient(45deg, #8e44ad, #8e44ad 10px, #6c3483 10px, #6c3483 20px)" }, 
+                4: { name: "Ethics & Moral Theory", volumes:4, color: "repeating-radial-gradient(circle, #a55eea, #a55eea 5px, #512da8 5px, #512da8 12px)" } 
+            } 
+        },
+
+        // === COLUMN 3 ===
+        "2C": { 
+            type: "Geography", 
+            topics: { 
+                1: { name: "Physical Topography", volumes:10, color: "linear-gradient(135deg, #3498db, #0d47a1)" }, 
+                2: { name: "Climatic Atmosphere Maps", volumes:10, color: "radial-gradient(circle, #70a1ff, #1e90ff, #000080)" }, 
+                3: { name: "Oceanic Currents Studies", volumes:10, color: "repeating-linear-gradient(45deg, #0044ff, #0044ff 10px, #0011aa 10px, #0011aa 20px)" }, 
+                4: { name: "Global Economic Mapping", volumes:10, color: "repeating-radial-gradient(circle, #3498db, #3498db 5px, #1a5276 5px, #1a5276 12px)" } 
+            } 
+        },
+        "1C": { 
+            type: "Arts", 
+            topics: { 
+                1: { name: "Renaissance Painting", volumes:10, color: "linear-gradient(135deg, #1abc9c, #0e6251)" }, 
+                2: { name: "Baroque Music Theory", volumes:10, color: "radial-gradient(circle, #00d2d3, #16a085, #0b5345)" }, 
+                3: { name: "Modern Architecture", volumes:10, color: "repeating-linear-gradient(45deg, #1abc9c, #1abc9c 10px, #117a65 10px, #117a65 20px)" }, 
+                4: { name: "Cinematic Evolution", volumes:10, color: "repeating-radial-gradient(circle, #01cbc6, #01cbc6 5px, #00565b 5px, #00565b 12px)" } 
+            } 
+        },
+
+        // === COLUMN 4 ===
+        "2D": { 
+            type: "Math", 
+            topics: { 
+                1: { name: "Foundational Arithmetic", volumes:10, color: "linear-gradient(135deg, #f1c40f, #7f6000)" }, 
+                2: { name: "Algebraic Equations Grid", volumes:10, color: "radial-gradient(circle, #ffeaa7, #fdcb6e, #b7791f)" }, 
+                3: { name: "Geometric Space Calculus", volumes:10, color: "repeating-linear-gradient(45deg, #ffff00, #ffff00 10px, #b8860b 10px, #b8860b 20px)" }, 
+                4: { name: "Statistical Probability", volumes:10, color: "repeating-radial-gradient(circle, #f1c40f, #f1c40f 5px, #9a7d0a 5px, #9a7d0a 12px)" } 
+            } 
+        },
+        "1D": { 
+            type: "Economics", 
+            topics: { 
+                1: { name: "Macroeconomic Systems", volumes:10, color: "linear-gradient(135deg, #718093, #2f3640)" }, 
+                2: { name: "Micro Market Dynamics", volumes:10, color: "radial-gradient(circle, #b2bec3, #636e72, #212121)" }, 
+                3: { name: "Fiscal Policy Analysis", volumes:10, color: "repeating-linear-gradient(45deg, #34495e, #34495e 10px, #2c3e50 10px, #2c3e50 20px)" }, 
+                4: { name: "Banking & Currencies", volumes:10, color: "repeating-radial-gradient(circle, #718093, #718093 5px, #1c2833 12px, #1c2833 12px)" } 
+            } 
+        },
+
+        // === COLUMN 5 ===
+        "2E": { 
+            type: "Science", 
+            topics: { 
+                1: { name: "Atomic Matter Physics", volumes:10, color: "linear-gradient(135deg, #00ffff, #006666)" }, 
+                2: { name: "Organic Chemical Bonds", volumes:10, color: "radial-gradient(circle, #e0ffff, #00eeee, #004d4d)" }, 
+                3: { name: "Biological Systems Evolution", volumes:10, color: "repeating-linear-gradient(45deg, #11ffff, #11ffff 10px, #00aaaa 10px, #00aaaa 20px)" }, 
+                4: { name: "Astrophysical Space Theory", volumes:10, color: "repeating-radial-gradient(circle, #00ffff, #00ffff 5px, #0e6655 5px, #0e6655 12px)" } 
+            } 
+        },
+        "1E": { 
+            type: "Astronomy", 
+            topics: { 
+                1: { name: "Planetary Mechanics", volumes:10, color: "linear-gradient(135deg, #95a5a6, #34495e)" }, 
+                2: { name: "Stellar Life Cycles", volumes:10, color: "radial-gradient(circle, #dcdde1, #7f8c8d, #2c3e50)" }, 
+                3: { name: "Galactic Clustering", volumes:10, color: "repeating-linear-gradient(45deg, #95a5a6, #95a5a6 10px, #5d6d7e 10px, #5d6d7e 20px)" }, 
+                4: { name: "Cosmological Constants", volumes:10, color: "repeating-radial-gradient(circle, #7f8c8d, #7f8c8d 5px, #1a252f 5px, #1a252f 12px)" } 
+            } 
+        },
+
+        // === COLUMN 6 ===
+        "2F": { 
+            type: "Bengali", 
+            topics: { 
+                1: { name: "Bengali Grammar Patterns", volumes:10, color: "linear-gradient(135deg, #ff00ff, #660066)" }, 
+                2: { name: "Classic Literary Prose", volumes:10, color: "radial-gradient(circle, #f8a5c2, #ee00ee, #4a004a)" }, 
+                3: { name: "Modern Poetry Anthology", volumes:10, color: "repeating-linear-gradient(45deg, #ff11ff, #ff11ff 10px, #aa00aa 10px, #aa00aa 20px)" }, 
+                4: { name: "Cultural Drama Essays", volumes:10, color: "repeating-radial-gradient(circle, #ee11ee, #ee11ee 5px, #6c3483 5px, #6c3483 12px)" } 
+            } 
+        },
+        "1F": { 
+            type: "Engineering", 
+            topics: { 
+                1: { name: "Structural Integrity", volumes:10, color: "linear-gradient(135deg, #27ae60, #0e3a1d)" }, 
+                2: { name: "Thermodynamic Flow", volumes:10, color: "radial-gradient(circle, #a3cb38, #2ecc71, #062310)" }, 
+                3: { name: "Digital Logic Design", volumes:10, color: "repeating-linear-gradient(45deg, #27ae60, #27ae60 10px, #196f3d 10px, #196f3d 20px)" }, 
+                4: { name: "Fluid Dynamics Systems", volumes:10, color: "repeating-radial-gradient(circle, #2ecc71, #2ecc71 5px, #145a32 5px, #145a32 12px)" } 
+            } 
+        }
+    };
 
     // Global Operating Runtime Maps
     let SHELF_TO_BOOK_MAP = {};
@@ -697,59 +821,6 @@
     let completedShelves = {};
     let payoutsAwarded = {}; 
     let isVictoryScreenLocked = false;
-
-    async function loadGameDatabase() {
-        try {
-            const response = await fetch('book_data.csv');
-            const csvText = await response.text();
-            
-            // Split into rows and clean empty entries
-            const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
-            
-            // Clear prior states to prevent dirty stacking on reload
-            SOURCE_MASTER_MAP = {};
-
-            for (let i = 1; i < rows.length; i++) {
-                const currentRow = rows[i];
-                
-                // Robust CSV splitting regex that cleanly strips out double quotes
-                const columns = currentRow.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || currentRow.split(',');
-                if (columns.length < 6) continue;
-
-                let cat = columns[0].trim();
-                let type = columns[1].trim();
-                let topicId = parseInt(columns[2].trim());
-                let name = columns[3].replace(/^"|"$/g, '').trim(); // Strips wrapping quotes cleanly
-                let vols = parseInt(columns[4].trim());
-                let color = columns[5].replace(/^"|"$/g, '').trim();
-
-                if (!SOURCE_MASTER_MAP[cat]) {
-                    SOURCE_MASTER_MAP[cat] = { type: type, topics: {} };
-                }
-                
-                // Store mapped properties explicitly
-                SOURCE_MASTER_MAP[cat].topics[topicId] = { 
-                    name: name, 
-                    volumes: vols, 
-                    color: color 
-                };
-            }
-
-            console.log("Database successfully synchronized from CSV!");
-            
-            const loadedSuccessfully = loadGameState();
-            if (!loadedSuccessfully) {
-                document.getElementById("length-modal").style.display = "flex";
-            }
-
-        } catch (error) {
-            console.error("Failed to load game content file:", error);
-        }
-    }
-    // 🌟 ONLY ONE SINGLE WINDOW ONLOAD CALLED HERE
-    window.onload = function() {
-        loadGameDatabase();
-    };
 
     function getBookConfigData(category, topicId) {
         let catConfig = SHELF_TO_BOOK_MAP[category];
@@ -811,6 +882,7 @@
             for(let t = 1; t <= currentCategoryTopicsCount; t++) {
                 payoutsAwarded[`${cat}-T${t}`] = false;
 
+                // 🌟 Dynamic Lookup: Clean up slots accurately matching configuration size
                 let maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[t].volumes || 10;
 
                 for(let v = 1; v <= maxVolsForThisTopic; v++) {
@@ -819,7 +891,10 @@
             }
         });
 
-        startNewGameSession();
+        initFloorBooks();
+        buildShelfLayoutDOM();
+        drawFloor();
+        renderUI();
     }
     // ==========================================
     // 3. RESTART WARNING & PROMPT SYSTEMS
@@ -862,6 +937,8 @@
 
             for (let t = 1; t <= currentCategoryTopicsCount; t++) {
                 let metadata = getBookConfigData(cat, t);
+                
+                // 🌟 Dynamic Lookup: Spawn only the exact number of books assigned to this topic
                 let maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[t].volumes || 10;
 
                 for (let v = 1; v <= maxVolsForThisTopic; v++) {
@@ -926,6 +1003,7 @@
                 const row = document.createElement("div");
                 row.className = "shelf-row";
                 
+                // 🌟 Dynamic Lookup: Get this specific topic's volume limit (default to 10 if missing)
                 let maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[t].volumes || 10;
                 
                 for (let v = 1; v <= maxVolsForThisTopic; v++) {
@@ -1135,9 +1213,6 @@
         saveGameState();
     }
 
-    // ==========================================
-    // 5. EVALUATION AND WIN CHECK SYSTEM
-    // ==========================================
     function discardTopBookToFloor() {
         if (playerHand.length === 0) return;
         
@@ -1176,7 +1251,7 @@
             }
             playerHand.unshift(completedShelves[targetKey]);
             completedShelves[targetKey] = null;
-            lfPayoutsAndWinConditions();
+            checkShelfPayoutsAndWinConditions();
             renderUI();
             return;
         }
@@ -1187,10 +1262,14 @@
         movingBook.placedAt = Date.now(); 
         
         completedShelves[targetKey] = movingBook;
-        lfPayoutsAndWinConditions();
+        checkShelfPayoutsAndWinConditions();
         renderUI();
         saveGameState();
     }
+
+    // ==========================================
+    // 5. EVALUATION AND WIN CHECK SYSTEM
+    // ==========================================
 
     function checkShelfPayoutsAndWinConditions() {
         rebuildDynamicShelfAssignments();
@@ -1199,25 +1278,28 @@
         let perfectRowsCount = 0;
 
         CATEGORIES.forEach(cat => {
-            if (!SHELF_TO_BOOK_MAP[cat] || !SHELF_TO_BOOK_MAP[cat].topics) return;
+            // 🌟 FIX 1: Dynamically count how many rows/topics this category actually has in the CSV!
+            let currentCategoryTopicsCount = 0;
+            if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics) {
+                currentCategoryTopicsCount = Object.keys(SHELF_TO_BOOK_MAP[cat].topics).length;
+            }
 
-            // 🌟 FIX: Extract the actual structural Topic IDs directly instead of an incrementing loop
-            let topicIds = Object.keys(SHELF_TO_BOOK_MAP[cat].topics);
-            totalActiveRows += topicIds.length;
+            totalActiveRows += currentCategoryTopicsCount;
 
-            topicIds.forEach(tKey => {
-                let shelfRow = parseInt(tKey); // This maps perfectly to T1, T2, T5, etc.
+            for (let shelfRow = 1; shelfRow <= currentCategoryTopicsCount; shelfRow++) {
                 let shelfKey = `${cat}-T${shelfRow}`;
                 let rowPerfect = true;
-                
-                let targetBookType = SHELF_TO_BOOK_MAP[cat].type;
+                let targetBookType = SHELF_TO_BOOK_MAP[cat] ? SHELF_TO_BOOK_MAP[cat].type : null;
                 let assignedTopicId = dynamicShelfMap[`${cat}-Row${shelfRow}`];
 
                 if (assignedTopicId === undefined || !targetBookType) {
                     rowPerfect = false;
                 } else {
-                    let topicConfig = SHELF_TO_BOOK_MAP[cat].topics[shelfRow];
-                    let maxVolsForThisTopic = topicConfig ? (topicConfig.volumes || 10) : 10;
+                    // 🌟 FIX 2: Correctly pull dynamic volumes for this exact topic from the map
+                    let maxVolsForThisTopic = 10;
+                    if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
+                        maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
+                    }
 
                     for (let v = 1; v <= maxVolsForThisTopic; v++) {
                         let book = completedShelves[`${cat}-T${shelfRow}-V${v}`];
@@ -1231,24 +1313,28 @@
                 if (rowPerfect) {
                     perfectRowsCount++;
                     if (!payoutsAwarded[shelfKey]) {
-                        let topicConfig = SHELF_TO_BOOK_MAP[cat].topics[shelfRow];
-                        let maxVolsForThisTopic = topicConfig ? (topicConfig.volumes || 10) : 10;
+                        // 🌟 FIX 3: Dynamic payout matching the actual number of slots!
+                        let maxVolsForThisTopic = 10;
+                        if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
+                            maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
+                        }
                         let dynamicPayoutValue = maxVolsForThisTopic * 2;
-                        
                         coins += dynamicPayoutValue;
                         payoutsAwarded[shelfKey] = true;
                     }
                 } else if (!rowPerfect && payoutsAwarded[shelfKey] && !isVictoryScreenLocked) {
-                    let topicConfig = SHELF_TO_BOOK_MAP[cat].topics[shelfRow];
-                    let maxVolsForThisTopic = topicConfig ? (topicConfig.volumes || 10) : 10;
+                    let maxVolsForThisTopic = 10;
+                    if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
+                        maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
+                    }
                     let dynamicPayoutValue = maxVolsForThisTopic * 2;
-                    
                     coins = Math.max(0, coins - dynamicPayoutValue);
                     payoutsAwarded[shelfKey] = false;
                 }
-            });
+            }
         });
 
+        // Only trigger win screen if all dynamically tracked rows match perfectly
         if (totalActiveRows > 0 && perfectRowsCount === totalActiveRows && !isVictoryScreenLocked) {
             isVictoryScreenLocked = true;
             setTimeout(() => {
@@ -1266,7 +1352,7 @@
         renderUI();
 
         let spellDuration = 0; 
-        let cooldownTime = Math.max(0, 4 - (lvlSort * 6)); 
+        let cooldownTime = Math.max(0, 4 - (lvlSort * 6)); /*change here 40 - (lvl*/
 
         cdQuickSortActive = true;
         startCooldown("btn-quickSort", spellDuration, cooldownTime, () => { cdQuickSortActive = false; });
@@ -1315,7 +1401,7 @@
 
         let frontType = playerHand[0].type;
         let frontTopic = playerHand[0].topic;
-        let allowedPulls = 9 + lvlPool;  
+        let allowedPulls = 9 + lvlPool;  /*change here 1 + lvl*/
         let pulledCount = 0;
 
         for (let i = floorBooks.length - 1; i >= 0; i--) {
@@ -1333,7 +1419,7 @@
         renderUI();
 
         let spellDuration = 0; 
-        let cooldownTime = Math.max(0, 5 - (lvlPool * 8));  
+        let cooldownTime = Math.max(0, 5 - (lvlPool * 8));  /*change here 75 - (lvl*/
 
         cdMagicPoolActive = true;
         startCooldown("btn-magicPool", spellDuration, cooldownTime, () => { cdMagicPoolActive = false; });
@@ -1410,6 +1496,7 @@
         if(open) renderModalUI();
     }
 
+    // 🌟 Functions to control and build the active Map content dynamically
     function toggleMapModal(open) {
         const modal = document.getElementById("map-modal");
         if (!modal) return;
@@ -1424,17 +1511,21 @@
         const container = document.getElementById("map-content-list");
         if (!container) return;
         
-        container.innerHTML = ""; 
+        container.innerHTML = ""; // Clear old text data
         
+        // Check if the game layout map is initialized yet
         if (!CATEGORIES || CATEGORIES.length === 0) {
             container.innerHTML = `<div style="color: #7f8c8d; font-style: italic; text-align: center;">No shift started yet.</div>`;
             return;
         }
         
+        // Automatically iterate through the active configurations
         CATEGORIES.forEach(cat => {
             if (SHELF_TO_BOOK_MAP[cat]) {
                 const rowLine = document.createElement("div");
                 rowLine.style.padding = "4px 0";
+                
+                // Format output style text -> "2A : Spells"
                 rowLine.innerHTML = `<strong style="color: #f1c40f;">${cat}</strong> : ${SHELF_TO_BOOK_MAP[cat].type}`;
                 container.appendChild(rowLine);
             }
@@ -1557,13 +1648,11 @@
             return false;
         }
     }
+    
+    window.onload = function() {
+        loadGameState();
+    };
 
-    function startNewGameSession() {
-        initFloorBooks();
-        buildShelfLayoutDOM();
-        drawFloor();
-        renderUI();
-    }
 </script>
 
 </body>
