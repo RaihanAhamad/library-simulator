@@ -702,32 +702,42 @@
         try {
             const response = await fetch('book_data.csv');
             const csvText = await response.text();
+            
+            // Split into rows and clean empty entries
             const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
             
+            // Clear prior states to prevent dirty stacking on reload
+            SOURCE_MASTER_MAP = {};
+
             for (let i = 1; i < rows.length; i++) {
                 const currentRow = rows[i];
-                const columns = currentRow.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || currentRow.split(',');
+                
+                // Robust CSV splitting regex that cleanly strips out double quotes
+                const columns = currentRow.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || currentRow.split(',');
                 if (columns.length < 6) continue;
 
                 let cat = columns[0].trim();
                 let type = columns[1].trim();
                 let topicId = parseInt(columns[2].trim());
-                let name = columns[3].replace(/"/g, '').trim();
+                let name = columns[3].replace(/^"|"$/g, '').trim(); // Strips wrapping quotes cleanly
                 let vols = parseInt(columns[4].trim());
-                let color = columns[5].replace(/"/g, '').trim();
+                let color = columns[5].replace(/^"|"$/g, '').trim();
 
                 if (!SOURCE_MASTER_MAP[cat]) {
                     SOURCE_MASTER_MAP[cat] = { type: type, topics: {} };
                 }
-                SOURCE_MASTER_MAP[cat].topics[topicId] = { name: name, volumes: vols, color: color };
+                
+                // Store mapped properties explicitly
+                SOURCE_MASTER_MAP[cat].topics[topicId] = { 
+                    name: name, 
+                    volumes: vols, 
+                    color: color 
+                };
             }
 
             console.log("Database successfully synchronized from CSV!");
             
-            // First look for local storage save configuration
             const loadedSuccessfully = loadGameState();
-            
-            // If there was no save state found, keep the shift length screen open
             if (!loadedSuccessfully) {
                 document.getElementById("length-modal").style.display = "flex";
             }
@@ -736,7 +746,6 @@
             console.error("Failed to load game content file:", error);
         }
     }
-
     // 🌟 ONLY ONE SINGLE WINDOW ONLOAD CALLED HERE
     window.onload = function() {
         loadGameDatabase();
@@ -1190,28 +1199,25 @@
         let perfectRowsCount = 0;
 
         CATEGORIES.forEach(cat => {
-            // 🌟 FIX 1: Dynamically count how many rows/topics this category actually has in the CSV!
-            let currentCategoryTopicsCount = 0;
-            if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics) {
-                currentCategoryTopicsCount = Object.keys(SHELF_TO_BOOK_MAP[cat].topics).length;
-            }
+            if (!SHELF_TO_BOOK_MAP[cat] || !SHELF_TO_BOOK_MAP[cat].topics) return;
 
-            totalActiveRows += currentCategoryTopicsCount;
+            // 🌟 FIX: Extract the actual structural Topic IDs directly instead of an incrementing loop
+            let topicIds = Object.keys(SHELF_TO_BOOK_MAP[cat].topics);
+            totalActiveRows += topicIds.length;
 
-            for (let shelfRow = 1; shelfRow <= currentCategoryTopicsCount; shelfRow++) {
+            topicIds.forEach(tKey => {
+                let shelfRow = parseInt(tKey); // This maps perfectly to T1, T2, T5, etc.
                 let shelfKey = `${cat}-T${shelfRow}`;
                 let rowPerfect = true;
-                let targetBookType = SHELF_TO_BOOK_MAP[cat] ? SHELF_TO_BOOK_MAP[cat].type : null;
+                
+                let targetBookType = SHELF_TO_BOOK_MAP[cat].type;
                 let assignedTopicId = dynamicShelfMap[`${cat}-Row${shelfRow}`];
 
                 if (assignedTopicId === undefined || !targetBookType) {
                     rowPerfect = false;
                 } else {
-                    // 🌟 FIX 2: Correctly pull dynamic volumes for this exact topic from the map
-                    let maxVolsForThisTopic = 10;
-                    if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
-                        maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
-                    }
+                    let topicConfig = SHELF_TO_BOOK_MAP[cat].topics[shelfRow];
+                    let maxVolsForThisTopic = topicConfig ? (topicConfig.volumes || 10) : 10;
 
                     for (let v = 1; v <= maxVolsForThisTopic; v++) {
                         let book = completedShelves[`${cat}-T${shelfRow}-V${v}`];
@@ -1225,28 +1231,24 @@
                 if (rowPerfect) {
                     perfectRowsCount++;
                     if (!payoutsAwarded[shelfKey]) {
-                        // 🌟 FIX 3: Dynamic payout matching the actual number of slots!
-                        let maxVolsForThisTopic = 10;
-                        if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
-                            maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
-                        }
+                        let topicConfig = SHELF_TO_BOOK_MAP[cat].topics[shelfRow];
+                        let maxVolsForThisTopic = topicConfig ? (topicConfig.volumes || 10) : 10;
                         let dynamicPayoutValue = maxVolsForThisTopic * 2;
+                        
                         coins += dynamicPayoutValue;
                         payoutsAwarded[shelfKey] = true;
                     }
                 } else if (!rowPerfect && payoutsAwarded[shelfKey] && !isVictoryScreenLocked) {
-                    let maxVolsForThisTopic = 10;
-                    if (SHELF_TO_BOOK_MAP[cat] && SHELF_TO_BOOK_MAP[cat].topics[shelfRow]) {
-                        maxVolsForThisTopic = SHELF_TO_BOOK_MAP[cat].topics[shelfRow].volumes || 10;
-                    }
+                    let topicConfig = SHELF_TO_BOOK_MAP[cat].topics[shelfRow];
+                    let maxVolsForThisTopic = topicConfig ? (topicConfig.volumes || 10) : 10;
                     let dynamicPayoutValue = maxVolsForThisTopic * 2;
+                    
                     coins = Math.max(0, coins - dynamicPayoutValue);
                     payoutsAwarded[shelfKey] = false;
                 }
-            }
+            });
         });
 
-        // Only trigger win screen if all dynamically tracked rows match perfectly
         if (totalActiveRows > 0 && perfectRowsCount === totalActiveRows && !isVictoryScreenLocked) {
             isVictoryScreenLocked = true;
             setTimeout(() => {
