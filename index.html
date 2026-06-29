@@ -1517,7 +1517,7 @@
 
         renderUI();
         let spellDuration = 0;
-        let cooldownTime = Math.max(5, 40 - (lvlSort * 7)); //For Testing Change Here (5, 40 - (lvlSort * 7)
+        let cooldownTime = Math.max(5, 40 - (lvlSort * 6)); //For Testing Change Here (5, 40 - (lvlSort * 6)
         cdQuickSortActive = true;
         startCooldown("btn-quickSort", spellDuration, cooldownTime, () => {
             cdQuickSortActive = false;
@@ -1532,8 +1532,8 @@
         drawFloor();
         renderUI();
 
-        let spellDuration = 5 + (lvlBook * 2);
-        let cooldownTime = Math.max(10, 60 - (lvlBook * 8));
+        let spellDuration = 5 + (lvlBook * 5);
+        let cooldownTime = Math.max(10, 60 - (lvlBook * 10));
 
         startCooldown("btn-locateBook", spellDuration, cooldownTime, () => {
             cdLocateBookActive = false;
@@ -1757,22 +1757,22 @@
         document.getElementById("buy-bag").disabled = (maxCapacity >= 15 || coins < bagCost);
 
         let sortCost = getUpgradeCost(lvlSort);
-        document.getElementById("desc-sort").innerText = `Tier ${lvlSort}/5 (Cooldown: ${40 - (lvlSort * 7)}s)`;
+        document.getElementById("desc-sort").innerText = `Tier ${lvlSort}/5 (Cooldown: ${40 - (lvlSort * 6)}s)`;
         document.getElementById("buy-sort").innerText = lvlSort >= 5 ? "MAXED OUT" : `💰${sortCost} Coins`;
         document.getElementById("buy-sort").disabled = (lvlSort >= 5 || coins < sortCost);
 
         let shelfCost = getUpgradeCost(lvlShelf);
-        document.getElementById("desc-shelf").innerText = `Tier ${lvlShelf}/5 (Cooldown Reduction Tuning Tiers)`;
+        document.getElementById("desc-shelf").innerText = `Tier ${lvlShelf}/5 (Duration: ${5 + (lvlShelf * 5)}s, Cooldown: ${60 - (lvlShelf * 10)}s)`;
         document.getElementById("buy-shelf").innerText = lvlShelf >= 5 ? "MAXED OUT" : `💰${shelfCost} Coins`;
         document.getElementById("buy-shelf").disabled = (lvlShelf >= 5 || coins < shelfCost);
 
         let bookCost = getUpgradeCost(lvlBook);
-        document.getElementById("desc-book").innerText = `Tier ${lvlBook}/5 (Duration: ${5 + (lvlBook * 2)}s, Cooldown: ${60 - (lvlBook * 8)}s)`;
+        document.getElementById("desc-book").innerText = `Tier ${lvlBook}/5 (Duration: ${5 + (lvlBook * 5)}s, Cooldown: ${60 - (lvlBook * 10)}s)`;
         document.getElementById("buy-book").innerText = lvlBook >= 5 ? "MAXED OUT" : `💰${bookCost} Coins`;
         document.getElementById("buy-book").disabled = (lvlBook >= 5 || coins < bookCost);
 
         let poolCost = getUpgradeCost(lvlPool);
-        document.getElementById("desc-pool").innerText = `Tier ${lvlPool}/8 (Pulls: ${9 + lvlPool} books)`;
+        document.getElementById("desc-pool").innerText = `Tier ${lvlPool}/8 (Pulls: ${1 + lvlPool} books, Cooldown: ${75 - (lvlPool * 8)}s)`;
         document.getElementById("buy-pool").innerText = lvlPool >= 8 ? "MAXED OUT" : `💰${poolCost} Coins`;
         document.getElementById("buy-pool").disabled = (lvlPool >= 8 || coins < poolCost);
     }
