@@ -1474,9 +1474,12 @@
 
         floorBooks.forEach(book => {
             const el = document.createElement("div");
+            const posX = book.x !== undefined ? book.x : Math.random() * 1880;
+            const posY = book.y !== undefined ? book.y : Math.random() * 1080;
+
             el.className = "book floor-mode book-size-lock";
-            el.style.left = `${book.x}px`;
-            el.style.top = `${book.y}px`;
+            el.style.left = `${posX}px`;
+            el.style.top = `${posY}px`;
             el.style.setProperty('--rot', `${book.rot}deg`);
             el.style.transform = `rotate(${book.rot}deg)`;
             el.style.background = book.color;
